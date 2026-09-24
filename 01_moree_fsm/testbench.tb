@@ -1,0 +1,43 @@
+module tb;
+  reg clk;
+  reg reset;
+  reg enable;
+  wire busy;
+  
+  moore_fsm dut(
+    .clk(clk),
+    .reset(reset),
+    .enable(enable),
+    .busy(busy)
+  );
+  always #5 clk = ~clk;
+  
+  initial begin
+    $dumpfile("moore_fsm.vcd");
+    $dumpvars(0,tb);
+    $monitor("time = %0t, clk = %b, reset = %b, enable = %b, busy = %b",
+             $time, clk, reset, enable, busy);
+  end
+  
+  initial begin 
+    
+    clk = 0;
+    enable = 0;
+    reset = 1;
+    #10;
+     
+    reset = 0;
+    
+    enable = 1;
+    #10;
+    
+    enable = 0;
+    #10;
+    
+    enable = 1;
+    #10;
+    
+    $finish;
+    
+  end
+endmodule
