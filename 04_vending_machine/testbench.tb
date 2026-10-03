@@ -1,0 +1,82 @@
+module tb;
+  
+ reg clk;
+  reg reset;
+  reg coin5;
+  reg coin10;
+  wire dispense;
+  wire change;
+  
+  vending_machine dut (
+    
+    .clk(clk),
+    .reset(reset),
+    .coin5(coin5),
+    .coin10(coin10),
+    .dispense(dispense),
+    .change(change)
+    
+  );
+  
+  always #5 clk = ~clk;
+  
+  initial begin 
+    
+    $dumpfile("vending_machine.vcd");
+    $dumpvars(0,tb);
+    $monitor("time = %0t, clk = %b, reset = %b, coin5 = %b, coin10 = %b, dispense = %b, change = %b",
+             $time, clk, reset, coin5, coin10, dispense, change);
+    
+  end
+  
+  initial begin
+
+        // Initial values
+        clk = 0;
+        reset = 1;
+        coin5 = 0;
+        coin10 = 0;
+
+        // Reset
+        #10;
+        reset = 0;
+
+        // Test 1: No coin
+        coin5 = 0;
+        coin10 = 0;
+        #10;
+
+        // Test 2: Insert ₹5
+        coin5 = 1;
+        coin10 = 0;
+        #10;
+
+        // Test 3: Insert another ₹5
+        coin5 = 1;
+        coin10 = 0;
+        #10;
+
+        // Test 4: Insert ₹10
+        coin5 = 0;
+        coin10 = 1;
+        #10;
+
+        // Test 5: Insert ₹5 then ₹10
+        coin5 = 1;
+        coin10 = 0;
+        #10;
+
+        coin5 = 0;
+        coin10 = 1;
+        #10;
+
+        // No coin
+        coin5 = 0;
+        coin10 = 0;
+        #10;
+
+        $finish;
+
+    end
+
+endmodule
