@@ -1,0 +1,78 @@
+module tb;
+  
+  reg clk;
+  reg reset;
+  reg floor1;
+  reg floor2;
+  reg floor3;
+  
+  wire up;
+  wire down;
+ wire at_floor;
+  
+  elevator dut (
+    
+    .clk(clk),
+    .reset(reset),
+    .floor1(floor1),
+    .floor2(floor2),
+    .floor3(floor3),
+    .up(up),
+    .down(down),
+    .at_floor(at_floor)
+    
+  );
+  
+  always #5 clk = ~clk;
+  
+  initial begin 
+    
+    $dumpfile("elevator.vcd");
+    $dumpvars(0,tb);
+    $monitor("time = %0t, clk = %b, reset = %b, floor1 = %b, floor2 = %b, floor3 = %b, up = %b, down = %b, at_floor = %b",
+             $time,clk,reset,floor1,floor2,floor3,up,down,at_floor);
+    
+  end
+  
+  initial begin
+    
+   
+        // Initial values
+        clk = 0;
+        reset = 1;
+        floor1 = 0;
+        floor2 = 0;
+        floor3 = 0;
+
+        // Reset elevator to Floor 1
+        #10;
+        reset = 0;
+
+        // Test 1: Request Floor 2
+        floor2 = 1;
+        #10;
+        floor2 = 0;
+
+        // Test 2: Request Floor 3
+        floor3 = 1;
+        #20;
+        floor3 = 0;
+
+        // Test 3: Request Floor 1
+        floor1 = 1;
+        #20;
+        floor1 = 0;
+
+        // Test 4: Request Floor 2
+        floor2 = 1;
+        #20;
+        floor2 = 0;
+
+        // No request
+        #10;
+    $finish;
+
+    
+  end
+  
+endmodule
